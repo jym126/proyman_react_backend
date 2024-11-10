@@ -6,7 +6,7 @@ const { home, allProjects, createProject, updateProject, deleteProject } = requi
 const route = Router();
 
 
-route.get('/', home);
+route.get('/home', home);
 route.get('/projects', allProjects);
 route.post('/projects', createProject);
 route.put('/projects/:id', updateProject);
