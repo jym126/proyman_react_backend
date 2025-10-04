@@ -54,8 +54,9 @@ const addTask = async (req, res) => {
 
     project.tasks.push(req.body);
     await project.save();
-    res.json(project);
+    res.json({ project });
   } catch (err) {
+    console.error("Error agregando tarea:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -71,30 +72,27 @@ const updateTask = async (req, res) => {
 
     Object.assign(task, req.body);
     await project.save();
-    res.json(project);
+    res.json({ project });
   } catch (err) {
+    console.error("Error actualizando tarea:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// ---- DELETE TASK seguro ----
 const deleteTask = async (req, res) => {
   try {
     const { id, taskId } = req.params;
-
-    // Buscar proyecto
+    
     const project = await Project.findById(id);
     if (!project) return res.status(404).json({ error: 'Proyecto no encontrado' });
 
-    // Buscar tarea
-    const task = project.tasks.id(taskId);
-    if (!task) return res.status(404).json({ error: 'Tarea no encontrada' });
+    // Filtrar la tarea eliminada
+    const taskExists = project.tasks.some(task => task._id.toString() === taskId);
+    if (!taskExists) return res.status(404).json({ error: 'Tarea no encontrada' });
 
-    // Eliminar tarea
-    task.remove();
+    project.tasks = project.tasks.filter(task => task._id.toString() !== taskId);
     await project.save();
 
-    // Retornar proyecto actualizado
     res.json({ message: 'Tarea eliminada correctamente', project });
   } catch (err) {
     console.error("Error eliminando tarea:", err);
