@@ -70,14 +70,26 @@ const updateTask = async (req, res) => {
 const deleteTask = async (req, res) => {
   try {
     const { id, taskId } = req.params;
+
+    // Buscar proyecto
     const project = await Project.findById(id);
-    project.tasks.id(taskId).remove();
+    if (!project) return res.status(404).json({ error: 'Proyecto no encontrado' });
+
+    // Buscar tarea
+    const task = project.tasks.id(taskId);
+    if (!task) return res.status(404).json({ error: 'Tarea no encontrada' });
+
+    // Eliminar tarea
+    task.remove();
     await project.save();
-    res.json(project);
+
+    res.json({ message: 'Tarea eliminada correctamente', project });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Error eliminando la tarea' });
   }
 };
+
 
 module.exports = {
   home, allProjects, createProject, updateProject, deleteProject,
