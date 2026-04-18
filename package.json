@@ -5,7 +5,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "ajv": "^8.17.1",
-    "axios": "^1.7.7",
+    "axios": "^1.15.0",
     "body-parse": "^0.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -16,7 +16,7 @@
     "proyman_react_backend": "file:",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-quill": "^0.0.2",
+    "react-quill": "^2.0.0",
     "react-scripts": "^0.0.0",
     "sweetalert2": "^11.6.13",
     "web-vitals": "^2.1.4"
