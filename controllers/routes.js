@@ -25,28 +25,38 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 // --- Helpers para Cloudinary ---
+// --- Helpers para Cloudinary Corregidos ---
+
 const extractPublicId = (url) => {
   if (!url || typeof url !== 'string') return null;
   try {
+    // 1. Obtenemos la parte después de '/upload/'
     const parts = url.split('/upload/');
     if (parts.length < 2) return null;
-    const afterUpload = parts[1];
-    const withoutVersion = afterUpload.replace(/^v\d+\//, '');
-    const publicId = withoutVersion.replace(/\.[^/.]+$/, '');
+    
+    // 2. Quitamos la versión (v1234567/) y la extensión (.jpg)
+    // Buscamos la parte que contiene la carpeta y el nombre
+    const publicIdWithExtension = parts[1].split('/').slice(1).join('/'); 
+    const publicId = publicIdWithExtension.replace(/\.[^/.]+$/, "");
+    
+    // Si usas carpeta, el ID debe incluirla: 'proyman/nombre_imagen'
     return publicId;
   } catch (error) {
+    console.error("Error extrayendo Public ID:", error);
     return null;
   }
 };
 
 const deleteFromCloudinary = async (url) => {
   const publicId = extractPublicId(url);
+  console.log("Intentando borrar Public ID:", publicId); // Para depurar en consola
+  
   if (publicId) {
     try {
-      await cloudinary.uploader.destroy(publicId);
-      console.log(`Eliminado de Cloudinary: ${publicId}`);
+      const result = await cloudinary.uploader.destroy(publicId);
+      console.log(`Resultado Cloudinary:`, result); // Debería decir {result: 'ok'}
     } catch (err) {
-      console.error(`Error eliminando ${publicId}:`, err);
+      console.error(`Error eliminando ${publicId} de Cloudinary:`, err);
     }
   }
 };
