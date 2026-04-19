@@ -39,7 +39,6 @@ const extractPublicId = (url) => {
     const publicIdWithExtension = parts[1].split('/').slice(1).join('/'); 
     const publicId = publicIdWithExtension.replace(/\.[^/.]+$/, "");
     
-    // Si usas carpeta, el ID debe incluirla: 'proyman/nombre_imagen'
     return publicId;
   } catch (error) {
     console.error("Error extrayendo Public ID:", error);
